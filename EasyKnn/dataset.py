@@ -78,9 +78,10 @@ class Dataset:
         [3.25, 5.0, 6.0]
 
         >>> dataset = Dataset()
-        >>> dataset.add_values([Value([1, None, None]), Value([None, 2, 2]), Value([None, None]), Value([1, 2])])
+        >>> dataset.add_values([Value([1, None, None]), Value([None, 2, 2]), Value([None, -7]), Value([1, 2])])
         >>> dataset.nonify()
         >>> dataset.average()
+        [1.0, -1.0, 2.0]
         """
 
         avg_coords = []
@@ -91,4 +92,9 @@ class Dataset:
 
         return avg_coords
 
+    def __repr__(self):
+        return f"{self._data}"
+
+    def __str__(self):
+        return f"{self._data}"
 
