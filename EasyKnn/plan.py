@@ -81,7 +81,7 @@ class Plan:
                 value_coord = value.coordinates[i]
                 point_coord = point.coordinates[i]
 
-                if value_coord is None:
+                if value_coord is None or point_coord is None:
                     # We will ignore this step, since the value is not defined in this dimension.
                     pass
 
@@ -98,17 +98,19 @@ class Plan:
 
             return result
 
-    def neighbors(self, value: Value, output: Literal['dataset', 'value'] = 'value', memoize: bool = True) -> List[Value]:
+    def neighbors(self, value: Value, output: Literal['dataset', 'value'] = 'value', memoize: bool = True, nonify:bool = True)  -> List[Value]:
         """
         Get the k nearest neighbors of a value
         :param value: The value to get the neighbors
         :param output: Either if you want the neither dataset of the neither value from the given value.
         :param memoize: If you want to memoize the distances between the values. This will make the algorithm faster, but will use more memory.
+        :param nonify: If all dataset should be nonized to the same dimension as the given value.
         :return:
         """
 
-        if None in value.coordinates or value.coordinates == []:
-            raise ValueError('The coordinate of \'value\' can\' be blank or have None values')
+        if nonify:
+            for dataset in self.datasets:
+                dataset.nonify(value.dimension)
 
         if output == 'value':
             values = [value for dataset in self.datasets for value in dataset.get_values()]
