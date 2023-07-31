@@ -1,4 +1,4 @@
-from typing import List, Literal
+from typing import List
 
 from EasyKnn.value import Value
 from EasyKnn.dataset import Dataset
@@ -72,9 +72,11 @@ class Plan:
 
         coord_sum = 0
 
-        if (value, point) in self.memoized and memoize is True:
+        tupled = (tuple(value.coordinates), tuple(point.coordinates))
+
+        if tupled in self.memoized and memoize is True:
             # We will use the memoized value if it is available
-            return self.memoized[(value, point)]
+            return self.memoized[tupled]
 
         else:
             for i in range(len(value.coordinates)):
@@ -94,7 +96,7 @@ class Plan:
             result = coord_sum ** 0.5
 
             if memoize is True:
-                self.memoized[(value, point)] = result
+                self.memoized[tupled] = result
 
             return result
 
