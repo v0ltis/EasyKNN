@@ -7,7 +7,7 @@ from EasyKnn.dataset import Dataset
 class Plan:
     """
     Represents a plan for a KNN algorithm.
-    There will be represented each value in a X-dimensional space.
+    There will be represented each value in an X-dimensional space.
     """
     def __init__(self):
         self.datasets = []
@@ -28,13 +28,6 @@ class Plan:
         """
         self.datasets.append(dataset)
 
-    def clear_cache(self):
-        """
-        Clear the cache of the plan
-        :return:
-        """
-        self.memoized = {}
-
     def add_datasets(self, datasets: List[Dataset]):
         """
         Add one or more datasets to the plan
@@ -51,6 +44,13 @@ class Plan:
         [[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]]
         """
         self.datasets.extend(datasets)
+
+    def clear_cache(self):
+        """
+        Clear the cache of the plan
+        :return:
+        """
+        self.memoized = {}
 
     def _distance(self, value: Value, point: Value, memoize: bool = True) -> float:
         """
