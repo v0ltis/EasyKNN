@@ -15,12 +15,24 @@ class Dataset:
         self._data.append(value)
         self._dataset_dimension = self.get_largest_dimension()
 
+        self.update_value_dataset()
+
     def add_values(self, values: List[Value]):
         self._data.extend(values)
         self._dataset_dimension = self.get_largest_dimension()
 
+        self.update_value_dataset()
+
     def get_values(self):
         return self._data
+
+    def update_value_dataset(self):
+        for value in self._data:
+            if value.dataset is None:
+                value.dataset = self
+
+            elif value.dataset is not self:
+                raise ValueError("A single value cannot be in two different datasets")
 
     def get_largest_dimension(self):
         """
