@@ -7,9 +7,14 @@ class Dataset:
     Represent a set of data
     """
 
-    def __init__(self):
+    def __init__(self, display_name: str = None):
         self._data = []
         self._dataset_dimension = 0
+        self.display_name = display_name
+
+        # Only set by Neighbours class.
+        # Should not be set manually.
+        self.average_dist = None
 
     def add_value(self, value: Value):
         self._data.append(value)
@@ -93,8 +98,12 @@ class Dataset:
         return avg_coords
 
     def __repr__(self):
-        return f"{self._data}"
+        return f"{self.display_name if self.display_name is not None else self._data}"
 
     def __str__(self):
-        return f"{self._data}"
+        return f"{self.display_name if self.display_name is not None else self._data}"
+
+    @property
+    def data(self):
+        return self._data
 
