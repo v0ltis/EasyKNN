@@ -18,4 +18,10 @@ class Value:
         return f"{self.display_name if self.display_name is not None else self.coordinates}"
 
     def __str__(self):
-        return f"{self.coordinates}"
+        return f"{self.display_name if self.display_name is not None else self.coordinates}"
+
+    def __eq__(self, other):
+        if not isinstance(other, Value):
+            raise TypeError(f"Cannot compare Value with {type(other)}")
+
+        return self.coordinates == other.coordinates
