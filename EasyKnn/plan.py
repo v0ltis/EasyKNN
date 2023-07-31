@@ -1,5 +1,6 @@
 from typing import List
 
+from EasyKnn.neighbours import Neighbours
 from EasyKnn.value import Value
 from EasyKnn.dataset import Dataset
 
@@ -100,7 +101,7 @@ class Plan:
 
             return result
 
-    def neighbors(self, value: Value, output: Literal['dataset', 'value'] = 'value', memoize: bool = True, nonify:bool = True)  -> List[Value]:
+    def neighbours(self, value: Value, memoize: bool = True, nonify: bool = True) -> Neighbours:
         """
         Get the k nearest neighbors of a value
         :param value: The value to get the neighbors
@@ -110,15 +111,19 @@ class Plan:
         :return:
         """
 
+        points = []
+
         if nonify:
             for dataset in self.datasets:
                 dataset.nonify(value.dimension)
 
-        if output == 'value':
-            values = [value for dataset in self.datasets for value in dataset.get_values()]
+        values = [value for dataset in self.datasets for value in dataset.get_values()]
 
-            distances = [self._distance(value, value, memoize) for value in values]
+        for point in values:
+            distance = self._distance(value, point, memoize)
 
-            return [values[i] for i in sorted(range(len(distances)), key=lambda x: distances[x])]
+            points.append(point.to_point(distance))
+
+        return Neighbours(points)
 
 
