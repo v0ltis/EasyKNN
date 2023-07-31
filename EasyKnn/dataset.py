@@ -41,9 +41,10 @@ class Dataset:
         """
         return max([value.dimension for value in self._data])
 
-    def nonify(self):
+    def nonify(self, min_dimension: int = None):
         """
-        Add "None"s to all values in the dataset where the dimension is smaller than the dataset dimension
+        Add "None"s to all values in the dataset where the dimension is smaller than the dataset dimension.
+        The min dimension is either the biggest dimension of a value in the dataset or the min_dimension parameter.
         :return: None
 
         >>> dataset = Dataset()
@@ -53,9 +54,12 @@ class Dataset:
         [[1, 2, 3, None], [4, 5, None, None], [6, 7, 8, 9]]
         """
 
+        if min_dimension is None:
+            min_dimension = self._dataset_dimension
+
         for i in range(len(self._data)):
             coords = self._data[i]
-            nonified_coords = coords.coordinates + [None] * (self._dataset_dimension - coords.dimension)
+            nonified_coords = coords.coordinates + [None] * (min_dimension - coords.dimension)
             self._data[i].coordinates = nonified_coords
 
     def average(self) -> List[float]:
