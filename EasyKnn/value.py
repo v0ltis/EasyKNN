@@ -1,5 +1,7 @@
 from typing import List, Union
 
+from EasyKnn.point import Point
+
 
 class Value:
     def __init__(self, coordinates: List[Union[int, float, None]], display_name: str = None):
@@ -13,6 +15,15 @@ class Value:
         self.display_name = display_name
 
         self.dataset = None
+
+    def to_point(self, distance: float) -> Point:
+        """
+        Convert the Value to a Point. This methode should only be called by the Plan class.
+        :param distance: The distance between the Value and the Point
+        :return: a Point object
+        """
+
+        return Point(self.coordinates, distance, self.dataset, self.display_name)
 
     def __repr__(self):
         return f"{self.display_name if self.display_name is not None else self.coordinates}"
