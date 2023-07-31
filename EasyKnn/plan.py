@@ -18,6 +18,13 @@ class Plan:
         Add a single dataset to the plan
         :param dataset:
         :return:
+
+        >>> plan = Plan()
+        >>> dataset = Dataset()
+        >>> dataset.add_values([Value([1, 2, 3]), Value([4, 5, 6])])
+        >>> plan.add_dataset(dataset)
+        >>> plan.datasets
+        [[[1, 2, 3], [4, 5, 6]]]
         """
         self.datasets.append(dataset)
 
@@ -33,6 +40,15 @@ class Plan:
         Add one or more datasets to the plan
         :param datasets:
         :return:
+
+        >>> plan = Plan()
+        >>> dataset1 = Dataset()
+        >>> dataset1.add_values([Value([1, 2, 3]), Value([4, 5, 6])])
+        >>> dataset2 = Dataset()
+        >>> dataset2.add_values([Value([7, 8, 9]), Value([10, 11, 12])])
+        >>> plan.add_datasets([dataset1, dataset2])
+        >>> plan.datasets
+        [[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]]
         """
         self.datasets.extend(datasets)
 
