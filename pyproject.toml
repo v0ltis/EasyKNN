@@ -1,6 +1,6 @@
 [project]
-name = "EasyKnn"
-version = "0.1"
+name = "EasyKNN"
+version = "0.1.0"
 authors = [
   { name="v0ltis", email="hello@voltis.me" },
 ]
