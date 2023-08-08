@@ -1,0 +1,22 @@
+[project]
+name = "EasyKnn"
+version = "0.1"
+authors = [
+  { name="v0ltis", email="hello@voltis.me" },
+]
+description = "An easy educational implementation of the KNN algorithm"
+readme = "README.md"
+requires-python = ">=3"
+classifiers = [
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Education',
+        'Topic :: Education',
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        'Natural Language :: English'
+    ]
+
+[project.urls]
+"Homepage" = "https://github.com/v0ltis/EasyKNN"
+"Bug Tracker" = "https://github.com/v0ltis/EasyKNN/issues"
