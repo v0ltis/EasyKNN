@@ -22,6 +22,7 @@ class Neighbours:
     def _process_data(self):
         """
         Process the data of the neighbours dataset, in order to obtain the nearest datasets.
+        Also, sort the values, from the nearest to the farthest.
 
         Should only be called by the Plan class, and Once.
 
@@ -47,7 +48,11 @@ class Neighbours:
 
         self.dataset_neighbours = sorted(count.keys(), key=lambda x: x.average_dist)
 
-    def nearest_neighbour(self, k=1):
+        # We now sort the values by the distance
+
+        self.neighbours = sorted(self.neighbours, key=lambda x: x.distance)
+
+    def nearest_neighbour(self, k=1) -> List[Point]:
         """
         Get the k nearest neighbours of the neighbours. If k is negative, it will get the k farthest neighbours.
         If k > len(self.dataset_neighbours), it will return all the neighbours.
@@ -56,12 +61,13 @@ class Neighbours:
         :return: The nearest neighbour of the neighbours
         """
         if k >= 0:
+
             return self.neighbours[:k]
 
         else:
-            return self.neighbours[::-1][:k]
+            return self.neighbours[::-1][:-k]
 
-    def nearest_dataset(self, k=1):
+    def nearest_dataset(self, k=1) -> List[Dataset]:
         """
         Get the k nearest datasets of the neighbours. If k is negative, it will get the k farthest datasets.
         If k > len(self.dataset_neighbours), it will return all the datasets.
@@ -73,4 +79,4 @@ class Neighbours:
             return self.dataset_neighbours[:k]
 
         else:
-            return self.dataset_neighbours[::-1][:k]
+            return self.dataset_neighbours[::-1][:-k]
