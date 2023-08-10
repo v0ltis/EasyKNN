@@ -8,6 +8,8 @@ class Neighbours:
     """
     Neighbours class represent the response of the Plan `neighbors` method.
     It is used to store the neighbours and distances of a given value.
+
+    :param neighbours: A list of Point objects, representing the neighbours of the value.
     """
     def __init__(self, neighbours: List[Point]):
 

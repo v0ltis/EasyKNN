@@ -17,12 +17,24 @@ class Dataset:
         self.average_dist = None
 
     def add_value(self, value: Value):
+        """
+        Add a single value to the dataset
+
+        :param value: The value to add to the dataset
+        :return: None
+        """
         self._data.append(value)
         self._dataset_dimension = self.get_largest_dimension()
 
         self.update_value_dataset()
 
     def add_values(self, values: List[Value]):
+        """
+        Add one or more values to the dataset
+
+        :param values: A list containing the values to add to the dataset
+        :return: None
+        """
         self._data.extend(values)
         self._dataset_dimension = self.get_largest_dimension()
 
@@ -42,7 +54,8 @@ class Dataset:
     def get_largest_dimension(self):
         """
         Get the largest dimension of the dataset
-        :return:
+
+        :return: The largest dimension of the dataset
         """
         return max([value.dimension for value in self._data])
 
@@ -50,6 +63,7 @@ class Dataset:
         """
         Add "None"s to all values in the dataset where the dimension is smaller than the dataset dimension.
         The min dimension is either the biggest dimension of a value in the dataset or the min_dimension parameter.
+
         :return: None
 
         >>> dataset = Dataset()
@@ -70,17 +84,19 @@ class Dataset:
     def average(self) -> List[float]:
         """
         Get the average position of all the values in the dataset. Nones values will not be counted.
-        :return:
+
+        :return: A list containing the average position of all the values in the dataset
+
         >>> dataset = Dataset()
         >>> dataset.add_values([Value([2, 2]), Value([4, 5]), Value([6, 8])])
         >>> dataset.average()
         [4.0, 5.0]
 
         >>> dataset = Dataset()
-        >>> dataset.add_values([Value([2]), Value([4, 5, 6]), Value([6, 8]), Value([1, 2])])
+        >>> dataset.add_values([Value([None, 5]), Value([None, 5, 6]), Value([None, 8]), Value([None, 2])])
         >>> dataset.nonify()
         >>> dataset.average()
-        [3.25, 5.0, 6.0]
+        [None, 5.0, 6.0]
 
         >>> dataset = Dataset()
         >>> dataset.add_values([Value([1, None, None]), Value([None, 2, 2]), Value([None, -7]), Value([1, 2])])

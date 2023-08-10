@@ -8,9 +8,15 @@ if TYPE_CHECKING:
 
 class Point:
     """
-    Represent a value, after being used in a Plan.Points should only be created by the Plan class.
+    A point object is an extension of the Value object. It is used after the Plan `neighbors` method.
+    This object should not be created by the user, but only by the Plan class.
 
-    Please, consider using a Value object instead.
+    :param coordinates: The coordinates of the Point. Must be a list of int, float or None values.
+    :param distance: the distance between the Point and the Value
+    :param dataset: the linked dataset of this Point
+    :param display_name: the displayed name of the Point
+
+    :exception NoDimensionError: if the coordinates are empty or only None values
     """
 
     def __init__(self, coordinates: List[Union[str, float, None]],

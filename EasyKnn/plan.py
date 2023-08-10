@@ -17,8 +17,9 @@ class Plan:
     def add_dataset(self, dataset: Dataset):
         """
         Add a single dataset to the plan
-        :param dataset:
-        :return:
+
+        :param dataset: The dataset to add to the plan
+        :return: None
 
         >>> plan = Plan()
         >>> dataset = Dataset()
@@ -32,8 +33,8 @@ class Plan:
     def add_datasets(self, datasets: List[Dataset]):
         """
         Add one or more datasets to the plan
-        :param datasets:
-        :return:
+        :param datasets: A list of datasets to add to the plan
+        :return: None
 
         >>> plan = Plan()
         >>> dataset1 = Dataset()
@@ -104,11 +105,13 @@ class Plan:
     def neighbours(self, value: Value, memoize: bool = True, nonify: bool = True) -> Neighbours:
         """
         Get the k nearest neighbors of a value
+
         :param value: The value to get the neighbors
         :param output: Either if you want the neither dataset of the neither value from the given value.
         :param memoize: If you want to memoize the distances between the values. This will make the algorithm faster, but will use more memory.
         :param nonify: If all dataset should be nonized to the same dimension as the given value.
-        :return:
+
+        :return: A Neighbours object
         """
 
         points = []
