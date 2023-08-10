@@ -109,7 +109,11 @@ class Dataset:
         for i in range(self._dataset_dimension):
             coords = [value.coordinates[i] for value in self._data if value.coordinates[i] is not None]
 
-            avg_coords.append(sum(coords) / len(coords))
+            if not coords:  # If coords is empty, append None, and prevent ZeroDivisionError
+                avg_coords.append(None)
+
+            else:
+                avg_coords.append(sum(coords) / len(coords))
 
         return avg_coords
 
