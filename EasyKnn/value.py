@@ -1,7 +1,8 @@
 from typing import List, Union
 from typing import TYPE_CHECKING
 
-from EasyKnn.errors import ValueAlreadyLinkedError, ReadOnlyAttributeError, CriticalDeletionError, NoDimensionError
+from EasyKnn.errors import ValueAlreadyLinkedError, ReadOnlyAttributeError, CriticalDeletionError
+from EasyKnn.errors import NoDimensionError
 from EasyKnn.point import Point
 
 if TYPE_CHECKING:
@@ -20,7 +21,7 @@ class Value:
 
     def __init__(self, coordinates: List[Union[int, float, None]], display_name: str = None):
         if coordinates == [None] * len(coordinates):  # This way is much faster than using all()
-            raise ValueError("Coordinates cannot be empty or only None values")
+            raise NoDimensionError("Coordinates cannot be empty or only None values")
 
         # We do allow the modification of the coordinates, but under certain conditions
         self._coordinates = coordinates
