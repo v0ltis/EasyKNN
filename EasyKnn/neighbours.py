@@ -1,5 +1,6 @@
 from typing import List
 
+from EasyKnn.errors import ReadOnlyAttributeError
 from EasyKnn.dataset import Dataset
 from EasyKnn.point import Point
 
@@ -13,13 +14,55 @@ class Neighbours:
     """
     def __init__(self, neighbours: List[Point]):
 
-        self.neighbours = neighbours
+        self._neighbours = neighbours
 
-        self.dataset_neighbours: List[Dataset] = []
+        self._dataset_neighbours = []
 
-        self.average_dist = sum([neighbour.distance for neighbour in self.neighbours]) / len(self.neighbours)
+        self._average_dist = sum([neighbour.distance for neighbour in self.neighbours]) / len(self.neighbours)
 
         self._process_data()
+
+    @property
+    def neighbours(self) -> List[Point]:
+        """
+        A list of all the neighbours of the value.
+
+        :read-only: True
+        """
+        return self._neighbours
+
+    @neighbours.setter
+    @neighbours.deleter
+    def neighbours(self, *args):
+        raise ReadOnlyAttributeError("The neighbours attribute is read-only")
+
+    @property
+    def dataset_neighbours(self) -> List[Dataset]:
+        """
+        A list of all the datasets of the neighbours of the value.
+
+        :read-only: True
+        """
+        return self._dataset_neighbours
+
+    @dataset_neighbours.setter
+    @dataset_neighbours.deleter
+    def dataset_neighbours(self, *args):
+        raise ReadOnlyAttributeError("The dataset_neighbours attribute is read-only")
+
+    @property
+    def average_dist(self) -> float:
+        """
+        The average distance of the neighbours to the value.
+
+        :read-only: True
+        """
+        return self._average_dist
+
+    @average_dist.setter
+    @average_dist.deleter
+    def average_dist(self, *args):
+        raise ReadOnlyAttributeError("The average_dist attribute is read-only")
 
     def _process_data(self):
         """

@@ -1,5 +1,6 @@
 from typing import List
 
+from EasyKnn.errors import ReadOnlyAttributeError
 from EasyKnn.neighbours import Neighbours
 from EasyKnn.value import Value
 from EasyKnn.dataset import Dataset
@@ -11,8 +12,36 @@ class Plan:
     There will be represented each value in an X-dimensional space.
     """
     def __init__(self):
-        self.datasets = []
-        self.memoized = {}
+        self._datasets = []
+        self._memoized = {}
+
+    @property
+    def datasets(self) -> List[Dataset]:
+        """
+        A list of all the datasets of the plan
+
+        :read-only: True
+        """
+        return self._datasets
+
+    @datasets.setter
+    @datasets.deleter
+    def datasets(self, *args):
+        raise ReadOnlyAttributeError("The datasets attribute is read-only")
+
+    @property
+    def memoized(self) -> dict:
+        """
+        A dictionary of all the memoized values of the plan
+
+        :read-only: True
+        """
+        return self._memoized
+
+    @memoized.setter
+    @memoized.deleter
+    def memoized(self, *args):
+        raise ReadOnlyAttributeError("The memoized attribute is read-only")
 
     def add_dataset(self, dataset: Dataset):
         """
@@ -28,7 +57,7 @@ class Plan:
         >>> plan.datasets
         [[[1, 2, 3], [4, 5, 6]]]
         """
-        self.datasets.append(dataset)
+        self._datasets.append(dataset)
 
     def add_datasets(self, datasets: List[Dataset]):
         """
@@ -45,14 +74,14 @@ class Plan:
         >>> plan.datasets
         [[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]]
         """
-        self.datasets.extend(datasets)
+        self._datasets.extend(datasets)
 
     def clear_cache(self):
         """
         Clear the cache of the plan
         :return:
         """
-        self.memoized = {}
+        self._memoized = {}
 
     def _distance(self, value: Value, point: Value, memoize: bool = True) -> float:
         """
@@ -76,9 +105,9 @@ class Plan:
 
         tupled = (tuple(value.coordinates), tuple(point.coordinates))
 
-        if tupled in self.memoized and memoize is True:
+        if tupled in self._memoized and memoize is True:
             # We will use the memoized value if it is available
-            return self.memoized[tupled]
+            return self._memoized[tupled]
 
         else:
             for i in range(len(value.coordinates)):
@@ -98,7 +127,7 @@ class Plan:
             result = coord_sum ** 0.5
 
             if memoize is True:
-                self.memoized[tupled] = result
+                self._memoized[tupled] = result
 
             return result
 

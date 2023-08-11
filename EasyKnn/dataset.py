@@ -1,4 +1,6 @@
 from typing import List
+
+from EasyKnn.errors import ReadOnlyAttributeError
 from EasyKnn.value import Value
 
 
@@ -14,7 +16,49 @@ class Dataset:
 
         # Only set by Neighbours class.
         # Should not be set manually.
-        self.average_dist = None
+        self._average_dist = None
+
+    @property
+    def data(self) -> List[Value]:
+        """
+        A list of all the values in the dataset.
+
+        :read-only: True
+        """
+        return self._data
+
+    @data.setter
+    @data.deleter
+    def data(self, *args):
+        raise ReadOnlyAttributeError("The data cannot be modified")
+
+    @property
+    def dataset_dimension(self) -> int:
+        """
+        The dimension of the dataset.
+
+        :read-only: True
+        """
+        return self._dataset_dimension
+
+    @dataset_dimension.setter
+    @dataset_dimension.deleter
+    def dataset_dimension(self, *args):
+        raise ReadOnlyAttributeError("The dataset_dimension cannot be modified")
+
+    @property
+    def average_dist(self) -> float:
+        """
+        The average distance of the dataset to the other datasets in the plan.
+
+        :read-only: True
+        """
+        return self._average_dist
+
+    @average_dist.setter
+    @average_dist.deleter
+    def average_dist(self, *args):
+        raise ReadOnlyAttributeError("The average_dist cannot be modified")
 
     def add_value(self, value: Value):
         """
@@ -40,18 +84,20 @@ class Dataset:
 
         self.update_value_dataset()
 
-    def get_values(self):
-        return self._data
+    def update_value_dataset(self) -> None:
+        """
+        Update the dataset attribute of all the values in the dataset
 
-    def update_value_dataset(self):
+        :return: None
+        """
         for value in self._data:
             if value.dataset is None:
-                value.dataset = self
+                value._set_dataset(self)
 
             elif value.dataset is not self:
                 raise ValueError("A single value cannot be in two different datasets")
 
-    def get_largest_dimension(self):
+    def get_largest_dimension(self) -> int:
         """
         Get the largest dimension of the dataset
 
@@ -59,7 +105,7 @@ class Dataset:
         """
         return max([value.dimension for value in self._data])
 
-    def nonify(self, min_dimension: int = None):
+    def nonify(self, min_dimension: int = None) -> None:
         """
         Add "None"s to all values in the dataset where the dimension is smaller than the dataset dimension.
         The min dimension is either the biggest dimension of a value in the dataset or the min_dimension parameter.
@@ -122,8 +168,3 @@ class Dataset:
 
     def __str__(self):
         return f"{self.display_name if self.display_name is not None else self._data}"
-
-    @property
-    def data(self):
-        return self._data
-

@@ -1,6 +1,7 @@
 from typing import List, Union
 from typing import TYPE_CHECKING
 
+from EasyKnn.errors import ValueAlreadyLinkedError, ReadOnlyAttributeError, CriticalValueDeletionError
 from EasyKnn.point import Point
 
 if TYPE_CHECKING:
@@ -18,16 +19,88 @@ class Value:
     """
 
     def __init__(self, coordinates: List[Union[int, float, None]], display_name: str = None):
-
         if coordinates == [None] * len(coordinates):  # This way is much faster than using all()
             raise ValueError("Coordinates cannot be empty or only None values")
 
-        self.coordinates = coordinates
-        self.dimension = len(coordinates)
+        # We do allow the modification of the coordinates, but under certain conditions
+        self._coordinates = coordinates
 
+        # We do not allow the modification and the deletion of the dimension
+        self._dimension = len(coordinates)
+
+        # we do allow the modification and the deletion of the display_name
         self.display_name = display_name
 
-        self.dataset = None
+        # We do allow the modification of the dataset, but under certain conditions
+        self._dataset = None
+
+    @property
+    def coordinates(self) -> List[Union[int, float, None]]:
+        """
+        The coordinates of the Value.
+
+        :read-only: False
+        :deletable: False
+        """
+        return self._coordinates
+
+    @coordinates.setter
+    def coordinates(self, value):
+
+        if value == [None] * len(value):  # This way is much faster than using all()
+            raise ValueError("Coordinates cannot be empty or only None values")
+        else:
+            self._coordinates = value
+            self._dimension = len(value)
+
+    @coordinates.deleter
+    def coordinates(self):
+        raise CriticalValueDeletionError("The coordinates attribute cannot be deleted")
+
+    # Alias for coordinates
+    value = coordinates
+
+    @property
+    def dimension(self) -> int:
+        """
+        The dimension of the Value. This value cannot be modified.
+
+        :read-only: True
+        """
+        return self._dimension
+
+    @dimension.setter
+    @dimension.deleter
+    def dimension(self, *args):
+        raise ReadOnlyAttributeError("The dimension attribute is read-only")
+
+    @property
+    def dataset(self) -> "Dataset":
+        """
+        The linked dataset of this Value. This value should not be modified.
+
+        :read-only: True
+        """
+        return self._dataset
+
+    @dataset.setter
+    @dataset.deleter
+    def dataset(self, *args):
+        raise ReadOnlyAttributeError("The dataset attribute is read-only")
+
+    def _set_dataset(self, value: "Dataset") -> None:
+        """
+        Set the dataset of the Value. This methode should only be called by the Dataset class.
+
+        :exception ValueAlreadyLinkedError: If the Value is already linked to a Dataset
+        :param value: The Dataset to link the Value to
+        :return: None
+        """
+
+        if self._dataset is None:
+            self._dataset = value
+        else:
+            raise ValueAlreadyLinkedError("This Value is already linked to a Dataset")
 
     def to_point(self, distance: float) -> Point:
         """
