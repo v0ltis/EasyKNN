@@ -1,8 +1,13 @@
 EasyKnn package
 ===============
 
-Submodules
-----------
+EasyKnn.value module
+--------------------
+
+.. automodule:: EasyKnn.value
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 EasyKnn.dataset module
 ----------------------
@@ -12,10 +17,10 @@ EasyKnn.dataset module
    :undoc-members:
    :show-inheritance:
 
-EasyKnn.neighbours module
--------------------------
+EasyKnn.weight module
+---------------------
 
-.. automodule:: EasyKnn.neighbours
+.. automodule:: EasyKnn.weight
    :members:
    :undoc-members:
    :show-inheritance:
@@ -28,6 +33,14 @@ EasyKnn.plan module
    :undoc-members:
    :show-inheritance:
 
+EasyKnn.neighbours module
+-------------------------
+
+.. automodule:: EasyKnn.neighbours
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 EasyKnn.point module
 --------------------
 
@@ -36,21 +49,6 @@ EasyKnn.point module
    :undoc-members:
    :show-inheritance:
 
-EasyKnn.value module
---------------------
-
-.. automodule:: EasyKnn.value
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-EasyKnn.weight module
----------------------
-
-.. automodule:: EasyKnn.weight
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 EasyKnn.errors module
 ---------------------
