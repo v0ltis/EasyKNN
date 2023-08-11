@@ -1,6 +1,7 @@
 from typing import List
 
-from EasyKnn.errors import ReadOnlyAttributeError, ValueAlreadyLinkedError, CriticalDeletionError
+from EasyKnn.errors import ReadOnlyAttributeError, ValueAlreadyLinkedError, CriticalDeletionError, \
+    DatasetAlreadyLinkedError
 from EasyKnn.value import Value
 
 
@@ -13,6 +14,7 @@ class Dataset:
         self._data = []
         self._dataset_dimension = 0
         self.display_name = display_name
+        self._liked_plan = None
 
         # Only set by Neighbours class.
         # Should not be set manually.
@@ -68,6 +70,22 @@ class Dataset:
     @average_dist.deleter
     def average_dist(self, *args):
         raise CriticalDeletionError("The average_dist attribute cannot be deleted")
+
+    @property
+    def linked_plan(self):
+        """
+        The plan the dataset is linked to. Editing this attribute is strongly discouraged.
+
+        :read-only: False
+        """
+        return self._liked_plan
+
+    @linked_plan.setter
+    def linked_plan(self, plan):
+        if self._liked_plan is None:
+            self._liked_plan = plan
+        else:
+            raise DatasetAlreadyLinkedError("A dataset can only be linked to one plan")
 
     def add_value(self, value: Value):
         """
