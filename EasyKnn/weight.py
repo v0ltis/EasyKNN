@@ -1,5 +1,7 @@
 from typing import List, Union
 
+from EasyKnn.errors import ReadOnlyAttributeError, CriticalDeletionError
+
 
 class Weight:
     """
