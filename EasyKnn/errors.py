@@ -40,7 +40,7 @@ class DatasetAlreadyLinkedError(Exception):
 
 
 class NoDimensionError(Exception):
-    """Raised when trying to create a :class:`Value<EasyKnn.value.Value> with no dimensions, or composed only of
+    """Raised when trying to create a :class:`Value<EasyKnn.value.Value`> with no dimensions, or composed only of
     ``None``.
 
     >>> from EasyKnn import Value
