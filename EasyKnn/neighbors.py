@@ -5,48 +5,48 @@ from EasyKnn.dataset import Dataset
 from EasyKnn.point import Point
 
 
-class Neighbours:
+class Neighbors:
     """
     Neighbours class represent the response of the Plan `neighbors` method.
     It is used to store the neighbours and distances of a given value.
 
     :param neighbours: A list of Point objects, representing the neighbours of the value.
     """
-    def __init__(self, neighbours: List[Point]):
+    def __init__(self, neighbors: List[Point]):
 
-        self._neighbours = neighbours
+        self._neighbors = neighbors
 
-        self._dataset_neighbours = []
+        self._dataset_neighbors = []
 
-        self._average_dist = sum([neighbour.distance for neighbour in self.neighbours]) / len(self.neighbours)
+        self._average_dist = sum([neighbor.distance for neighbor in self.neighbors]) / len(self.neighbors)
 
         self._process_data()
 
     @property
-    def neighbours(self) -> List[Point]:
+    def neighbors(self) -> List[Point]:
         """
         A list of all the neighbours of the value.
 
         :read-only: True
         """
-        return self._neighbours
+        return self._neighbors
 
-    @neighbours.setter
-    def neighbours(self, *args):
-        raise ReadOnlyAttributeError("The neighbours attribute is read-only")
+    @neighbors.setter
+    def neighbors(self, *args):
+        raise ReadOnlyAttributeError("The neighbors attribute is read-only")
 
     @neighbours.deleter
     def neighbours(self, *args):
         raise CriticalDeletionError("The neighbours attribute cannot be deleted")
 
     @property
-    def dataset_neighbours(self) -> List[Dataset]:
+    def dataset_neighbors(self) -> List[Dataset]:
         """
         A list of all the datasets of the neighbours of the value.
 
         :read-only: True
         """
-        return self._dataset_neighbours
+        return self._dataset_neighbors
 
     @dataset_neighbours.setter
     def dataset_neighbours(self, *args):
@@ -86,13 +86,13 @@ class Neighbours:
         # We start by ranking the datasets by the average distance of the neighbours
         count = {}
 
-        for neighbour in self.neighbours:
+        for neighbor in self.neighbors:
 
-            if neighbour.dataset in count:
-                count[neighbour.dataset] += neighbour.distance
+            if neighbor.dataset in count:
+                count[neighbor.dataset] += neighbor.distance
 
             else:
-                count[neighbour.dataset] = neighbour.distance
+                count[neighbor.dataset] = neighbor.distance
 
         # We save each average distance in each dataset
         for dataset in count:
@@ -100,13 +100,13 @@ class Neighbours:
 
         #  We sort the datasets by the average distance
 
-        self._dataset_neighbours = sorted(count.keys(), key=lambda x: x.average_dist)
+        self._dataset_neighbors = sorted(count.keys(), key=lambda x: x.average_dist)
 
         # We now sort the values by the distance
 
-        self._neighbours = sorted(self.neighbours, key=lambda x: x.distance)
+        self._neighbors = sorted(self.neighbors, key=lambda x: x.distance)
 
-    def nearest_neighbour(self, k=1) -> List[Point]:
+    def nearest_neighbor(self, k: int = 1) -> List[Point]:
         """
         Get the k nearest neighbours of the neighbours. If k is negative, it will get the k farthest neighbours.
         If k > len(self.dataset_neighbours), it will return all the neighbours.
@@ -116,10 +116,10 @@ class Neighbours:
         """
         if k >= 0:
 
-            return self.neighbours[:k]
+            return self.neighbors[:k]
 
         else:
-            return self.neighbours[::-1][:-k]
+            return self.neighbors[::-1][:-k]
 
     def nearest_dataset(self, k=1) -> List[Dataset]:
         """
@@ -130,7 +130,7 @@ class Neighbours:
         :return: The nearest dataset of the neighbours
         """
         if k >= 0:
-            return self.dataset_neighbours[:k]
+            return self.dataset_neighbors[:k]
 
         else:
-            return self.dataset_neighbours[::-1][:-k]
+            return self.dataset_neighbors[::-1][:-k]

@@ -4,7 +4,7 @@ version = "0.2.0"
 authors = [
   { name="v0ltis", email="hello@voltis.me" },
 ]
-description = "An easy educational implementation of the K nearest neighbours algorithm"
+description = "An easy educational implementation of the K nearest neighbors algorithm"
 readme = "README.md"
 requires-python = ">=3.6"
 classifiers = [

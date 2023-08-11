@@ -1,7 +1,7 @@
 from typing import List
 
 from EasyKnn.errors import ReadOnlyAttributeError, CriticalDeletionError
-from EasyKnn.neighbours import Neighbours
+from EasyKnn.neighbors import Neighbors
 from EasyKnn.value import Value
 from EasyKnn.dataset import Dataset
 from EasyKnn.weight import Weight
@@ -161,9 +161,9 @@ class Plan:
 
             return result
 
-    def neighbours(self, value: Value, memoize: bool = True,
-                   nonify: bool = True, weight: Weight = Weight([]),
-                   use_abs: bool = True) -> Neighbours:
+    def neighbors(self, value: Value, memoize: bool = True,
+                  nonify: bool = True, weight: Weight = Weight([]),
+                  use_abs: bool = True) -> Neighbors:
         """
         Get the k nearest neighbors of a value
 
@@ -193,4 +193,4 @@ class Plan:
 
             points.append(point.to_point(distance))
 
-        return Neighbours(points)
+        return Neighbors(points)

@@ -16,7 +16,7 @@ class Dataset:
         self.display_name = display_name
         self._liked_plan = None
 
-        # Only set by Neighbours class.
+        # Only set by Neighbors class.
         # Should not be set manually.
         self._average_dist = None
 

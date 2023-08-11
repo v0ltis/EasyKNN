@@ -41,9 +41,9 @@ plan = Plan()
 plan.add_dataset(dealership)
 
 # Then, we will calculate the best car for Bob.
-best_car = plan.neighbours(Bob, weight=bob_weight)
+best_car = plan.neighbors(Bob, weight=bob_weight)
 
-print("The best car for Bob is:", best_car.neighbours[0])
+print("The best car for Bob is:", best_car.neighbors[0])
 # The best car for Bob is: BMW 3-Series
 
 # Now, someone who do not care at all the fuel consumption of the car she is looking for
@@ -52,9 +52,9 @@ alice = Value([7.5, 125, 180, 23000])  # The fuel consumption could also be 0, s
 
 alice_weight = Weight([0, 1, 1, 0.7])
 
-best_car = plan.neighbours(alice, weight=alice_weight)
+best_car = plan.neighbors(alice, weight=alice_weight)
 
-print("The best car for Alice is:", best_car.neighbours[0])
+print("The best car for Alice is:", best_car.neighbors[0])
 # The best car for Alice is: Škoda Octavia
 
 # Now, someone who just want the cheapest car
@@ -64,8 +64,8 @@ charlie = Value([7.5, 125, 180, 0])
 charlie_weight = Weight([0, 0, 0, 1])  # We set the wanted price to 0, since it is the only value that matters.
                                        # The nearest car will be the cheapest one.
 
-best_car = plan.neighbours(charlie, weight=charlie_weight, use_abs=False)
+best_car = plan.neighbors(charlie, weight=charlie_weight, use_abs=False)
 
-print("The best car for Charlie is:", best_car.neighbours[0])
+print("The best car for Charlie is:", best_car.neighbors[0])
 # The best car for Charlie is: Citroen Ami
 

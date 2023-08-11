@@ -30,39 +30,31 @@ plan.add_dataset(dataset2)
 
 value = Value([1, 2, 3, 5, 6])  # 5 values (so, it is a 5 dimensional value)
 
-neighbours = plan.neighbours(  # We get the nearest point (AKA: the nearest neighbour) of the given value
-
-    value,            # The value to get the nearest neighbour
-
-    memoize=True,     # We want to use the memoization (cache) system. Activated by default
-
-    nonify=True       # If we want to add "None"s where a value is missing. Activated by default. Do not set
-                      # it to False unless you know what you are doing
-)
+neighbors = plan.neighbors(value, memoize=True, nonify=True)
 
 # Now, we can get all the data we want. Any calculation has been processed by the plan.
 
-# We can get the nearest neighbour
+# We can get the nearest neighbor
 
-nearest_neighbour = neighbours.nearest_neighbour(
-    k=1,           # We want the nearest neighbour. If we want the 3 nearest neighbours, we would set k to 3
+nearest_neighbor = neighbors.nearest_neighbor(
+    k=1,           # We want the nearest neighbor. If we want the 3 nearest neighbors, we would set k to 3
 
 )[0]               # We add a [0] because we want the first (and only) element of the list.
                    # This function return a list of values
 
-print(nearest_neighbour)
+print(nearest_neighbor)
 # >>> [[1, 2, 3, None, None]]
 # Nones are appearing because the value has 5 dimensions. The nonification added missing Nones
 
 
-# We now want to get the distance between the value and the nearest neighbour
-print(nearest_neighbour.distance)
+# We now want to get the distance between the value and the nearest neighbor
+print(nearest_neighbor.distance)
 # >>> 1.0
 
 
-# We now want to know in average, which dataset is the nearest neighbour from the value
+# We now want to know in average, which dataset is the nearest neighbor from the value
 
-nearest_dataset = neighbours.nearest_dataset(
+nearest_dataset = neighbors.nearest_dataset(
     k=1,           # We want the nearest dataset. If we want the 3 nearest datasets, we would set k to 3
 
 )[0]               # Again, we add a [0] because we want the first (and only) element of the list.
