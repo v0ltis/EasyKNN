@@ -1,7 +1,8 @@
 from typing import List, Union
 from typing import TYPE_CHECKING
 
-from EasyKnn.errors import ValueAlreadyLinkedError, ReadOnlyAttributeError, CriticalValueDeletionError
+from EasyKnn.errors import ValueAlreadyLinkedError, ReadOnlyAttributeError, CriticalDeletionError
+from EasyKnn.errors import NoDimensionError
 from EasyKnn.point import Point
 
 if TYPE_CHECKING:
@@ -12,15 +13,16 @@ class Value:
     """
     A Value object is the base object of the EasyKnn library. It is used to represent a set of coordinates.
 
-    :param coordinates: The coordinates of the Value. Must be a list of int, float or None values.
+    :param coordinates: The coordinates of the Value. Must be a ``list`` of ``int``, ``float`` or ``None`` values.
     :param display_name: the displayed name of the Value
 
-    :exception ValueError: if the coordinates are empty or only None values
+    :exception NoDimensionError: If the coordinates are empty or only None values
     """
 
     def __init__(self, coordinates: List[Union[int, float, None]], display_name: str = None):
+
         if coordinates == [None] * len(coordinates):  # This way is much faster than using all()
-            raise ValueError("Coordinates cannot be empty or only None values")
+            raise NoDimensionError("Coordinates cannot be empty or only None values")
 
         # We do allow the modification of the coordinates, but under certain conditions
         self._coordinates = coordinates
@@ -40,7 +42,6 @@ class Value:
         The coordinates of the Value.
 
         :read-only: False
-        :deletable: False
         """
         return self._coordinates
 
@@ -48,17 +49,20 @@ class Value:
     def coordinates(self, value):
 
         if value == [None] * len(value):  # This way is much faster than using all()
-            raise ValueError("Coordinates cannot be empty or only None values")
+            raise NoDimensionError("Coordinates cannot be empty or only None values")
         else:
             self._coordinates = value
             self._dimension = len(value)
 
     @coordinates.deleter
     def coordinates(self):
-        raise CriticalValueDeletionError("The coordinates attribute cannot be deleted")
+        raise CriticalDeletionError("The coordinates attribute cannot be deleted")
 
     # Alias for coordinates
     value = coordinates
+    """
+    Alias for the :attr:`coordinates<EasyKnn.value.Value.coordinates>` attribute.
+    """
 
     @property
     def dimension(self) -> int:
@@ -70,30 +74,36 @@ class Value:
         return self._dimension
 
     @dimension.setter
-    @dimension.deleter
     def dimension(self, *args):
         raise ReadOnlyAttributeError("The dimension attribute is read-only")
+
+    @dimension.deleter
+    def dimension(self):
+        raise CriticalDeletionError("The dimension attribute cannot be deleted")
 
     @property
     def dataset(self) -> "Dataset":
         """
-        The linked dataset of this Value. This value should not be modified.
+        The linked :class:`Dataset<EasyKnn.dataset.Dataset>` of this Value. This value should not be modified.
 
         :read-only: True
         """
         return self._dataset
 
     @dataset.setter
-    @dataset.deleter
     def dataset(self, *args):
         raise ReadOnlyAttributeError("The dataset attribute is read-only")
 
+    @dataset.deleter
+    def dataset(self):
+        raise CriticalDeletionError("The dataset attribute cannot be deleted")
+
     def _set_dataset(self, value: "Dataset") -> None:
         """
-        Set the dataset of the Value. This methode should only be called by the Dataset class.
+        Set the dataset of the Value. This methode should only be called by the ``Dataset`` class.
 
-        :exception ValueAlreadyLinkedError: If the Value is already linked to a Dataset
         :param value: The Dataset to link the Value to
+        :exception ValueAlreadyLinkedError: If the Value is already linked to a Dataset
         :return: None
         """
 
@@ -102,9 +112,9 @@ class Value:
         else:
             raise ValueAlreadyLinkedError("This Value is already linked to a Dataset")
 
-    def to_point(self, distance: float) -> Point:
+    def _to_point(self, distance: float) -> Point:
         """
-        Convert the Value to a Point. This methode should only be called by the Plan class.
+        Convert the Value to a :class:EasyKnn.Point. This methode should only be called by the Plan class.
 
         :param distance: The distance between the Value and the Point
         :return: a Point object

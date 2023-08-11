@@ -78,17 +78,11 @@ student = Value([8, 4, 2, 7], display_name="Hughes Pham")  # Here, Hughes Pham h
 
 # Now, we will calculate the distance between the student and all the other values
 
-neighbours = plan.neighbours(
-    student,        # The value we want to find the neighbours of
-    memoize=True,   # We do want to use memoization, 'cause why not ?
-    nonify=False    # We can turn off nonification since all the values are
-                    # 4-dimensional, but it is not recommended and necessary
-
-)
+neighbors = plan.neighbors(student, memoize=True, nonify=False)
 
 
 # Now, we will display 3 student who will be the most likely to be friends with Hughes Pham
-likely_friends = neighbours.nearest_neighbour(3)
+likely_friends = neighbors.nearest_neighbor(3)
 
 for i in range(3):
     print(
@@ -100,7 +94,7 @@ for i in range(3):
 print("\n\n\n")
 
 # We also want to know the 3 students who will be the least likely to be friends with Hughes Pham
-unlikely_friends = neighbours.nearest_neighbour(-3)  # A negative number will return the furthest neighbours
+unlikely_friends = neighbors.nearest_neighbor(-3)  # A negative number will return the furthest neighbors
 
 for i in range(3):
     print(
@@ -114,7 +108,7 @@ print("\n\n\n")
 
 # Now, we will find the house of Hughes Pham !
 
-house = neighbours.nearest_dataset(
+house = neighbors.nearest_dataset(
     1,  # We only want to find the nearest dataset
 
 )[0]  # We only want the element of the list, not the list itself
