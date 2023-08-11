@@ -102,7 +102,7 @@ class Plan:
         """
         self._memoized = {}
 
-    def _distance(self, value: Value, point: Value, weights: Weight,  memoize: bool = True) -> float:
+    def _distance(self, value: Value, point: Value, weights: Weight, memoize: bool = True, use_abs = True) -> float:
         """
         Get the distance between two values
         :return: The distance between the two values
@@ -146,6 +146,16 @@ class Plan:
             # this work for any number of dimensions
             result = coord_sum ** 0.5
 
+            # If a weight or a value is negative, the distance will be complex. We will return a non-complex value.
+            if isinstance(result, complex):
+                # We will return the absolute value of the distance.
+
+                # Despite the use_abs parameter, we will always use the absolute value of the distance.
+                # In fact, use_abs determines if the distance should always be positive or not.
+                # A negative distance is considered as nearest than 0 by the algorithm,
+                # even if it's not mathematically true.
+                result = abs(result) * -1 if not use_abs else abs(result)
+
             if memoize is True:
                 self._memoized[tupled] = result
 
@@ -179,9 +189,7 @@ class Plan:
         values = [value for dataset in self.datasets for value in dataset.data]
 
         for point in values:
-            distance = self._distance(value, point, weight, memoize)
-            if use_abs:
-                distance = abs(distance)
+            distance = self._distance(value, point, weight, memoize, use_abs=use_abs)
 
             points.append(point.to_point(distance))
 
