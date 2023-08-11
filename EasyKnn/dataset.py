@@ -85,7 +85,7 @@ class Dataset:
         if self._liked_plan is None:
             self._liked_plan = plan
         else:
-            raise DatasetAlreadyLinkedError("A dataset can only be linked to one plan")
+            raise DatasetAlreadyLinkedError("This dataset is already linked to a plan")
 
     def add_value(self, value: Value):
         """
