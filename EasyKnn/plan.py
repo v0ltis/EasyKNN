@@ -64,6 +64,11 @@ class Plan:
         >>> plan.datasets
         [[[1, 2, 3], [4, 5, 6]]]
         """
+
+        # We will add the plan to the dataset.
+        # An error will be raised if the dataset is already linked to a plan
+        dataset.linked_plan = self
+
         self._datasets.append(dataset)
 
     def add_datasets(self, datasets: List[Dataset]):
@@ -81,6 +86,13 @@ class Plan:
         >>> plan.datasets
         [[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]]
         """
+
+        # We will add the plan to each dataset.
+        # An error will be raised if any dataset is already linked to a plan
+
+        for dataset in datasets:
+            dataset.linked_plan = self
+
         self._datasets.extend(datasets)
 
     def clear_cache(self):
