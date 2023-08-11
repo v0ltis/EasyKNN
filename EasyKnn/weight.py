@@ -62,7 +62,7 @@ class Weight:
 
     def __getitem__(self, item: int) -> Union[float, int, None]:
         if item >= len(self._weight):
-            return None
+            return 1
 
         value = self._weight[item]
         return value if value is not None else 1
