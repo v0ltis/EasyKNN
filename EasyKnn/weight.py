@@ -5,6 +5,12 @@ class Weight:
     """
     A weight class represent the importance of a dimension in a value. It can be greater than 1 to make it more
     important, or less than 1 to make it less important. It can also be negative. None will result as a weight of 1.
+
+    A negative weigh will subtract the value of the dimension to the distance, instead of adding it. If you set use_abs
+    to False in Plan.neighbors method, negative values will considered as nearest than a 0 distance to the searched value.
+
+    :param weight: The weight of each dimension. Must be a list of None, float or int values. Can be empty.
+                    The default value is either 1 or None
     """
 
     def __init__(self, weight: List[Union[float, int, None]]):
