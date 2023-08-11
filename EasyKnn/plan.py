@@ -4,6 +4,7 @@ from EasyKnn.errors import ReadOnlyAttributeError
 from EasyKnn.neighbours import Neighbours
 from EasyKnn.value import Value
 from EasyKnn.dataset import Dataset
+from EasyKnn.weight import Weight
 
 
 class Plan:
@@ -83,7 +84,7 @@ class Plan:
         """
         self._memoized = {}
 
-    def _distance(self, value: Value, point: Value, memoize: bool = True) -> float:
+    def _distance(self, value: Value, point: Value, weights: Weight,  memoize: bool = True) -> float:
         """
         Get the distance between two values
         :return: The distance between the two values
@@ -92,12 +93,12 @@ class Plan:
         >>> point = Value([2, 2, 2])
 
         >>> plan = Plan()
-        >>> plan._distance(value, point)
+        >>> plan._distance(value, point, Weight([1, 1, 1]))
         1.0
 
         >>> value = Value([None, 2, 2])
         >>> point = Value([2, 2, 2])
-        >>> plan._distance(value, point)
+        >>> plan._distance(value, point, Weight([1, 1, 1]))
         0.0
         """
 
@@ -120,7 +121,8 @@ class Plan:
 
                 else:
                     # We will add the square of the difference between the two coordinates
-                    coord_sum += (value_coord - point_coord) ** 2
+                    coord_sum += (value_coord - point_coord) ** 2 * weights[i]  # Euclidean distance, multiplied by the weight.
+                                                                                # If weight[i] is not defined, 1 will nbe returned
 
             # we take the square root of the sum of the squares.
             # this work for any number of dimensions
@@ -131,15 +133,22 @@ class Plan:
 
             return result
 
-    def neighbours(self, value: Value, memoize: bool = True, nonify: bool = True) -> Neighbours:
+    def neighbours(self, value: Value, memoize: bool = True,
+                   nonify: bool = True, weight: Weight = Weight([]),
+                   use_abs: bool = True) -> Neighbours:
         """
         Get the k nearest neighbors of a value
 
         :param value: The value to get the neighbors
-        :param output: Either if you want the neither dataset of the neither value from the given value.
-        :param memoize: If you want to memoize the distances between the values. This will make the algorithm faster, but will use more memory.
+        :param memoize: If you want to memoize the distances between the values. This will make the algorithm faster,
+                        but will use more memory.
         :param nonify: If all dataset should be nonized to the same dimension as the given value.
-
+        :param weight: The weight to use for the distance calculation. By default, each dimension will have a weight
+                        set to 1.
+        :param use_abs: If the absolute value of the distance should be used. Useless with the default weight,
+                        but if negatives weights are used, this can be usefull. Disabling this will make the algorithm
+                        considering a distance of -7 nearest than 0 for example. Enabling this will make the algorithm
+                        considering a distance of 0 nearest than -7.
         :return: A Neighbours object
         """
 
@@ -149,13 +158,13 @@ class Plan:
             for dataset in self.datasets:
                 dataset.nonify(value.dimension)
 
-        values = [value for dataset in self.datasets for value in dataset.get_values()]
+        values = [value for dataset in self.datasets for value in dataset.data]
 
         for point in values:
-            distance = self._distance(value, point, memoize)
+            distance = self._distance(value, point, weight, memoize)
+            if use_abs:
+                distance = abs(distance)
 
             points.append(point.to_point(distance))
 
         return Neighbours(points)
-
-
