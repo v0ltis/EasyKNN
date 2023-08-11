@@ -44,6 +44,14 @@ EasyKnn.value module
    :undoc-members:
    :show-inheritance:
 
+EasyKnn.weight module
+---------------------
+
+.. automodule:: EasyKnn.weight
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 EasyKnn.errors module
 ---------------------
 
