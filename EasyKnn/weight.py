@@ -5,17 +5,22 @@ from EasyKnn.errors import ReadOnlyAttributeError, CriticalDeletionError
 
 class Weight:
     """
-    A weight class represent the importance of a dimension in a value. It can be greater than 1 to make it more
-    important, or less than 1 to make it less important. It can also be negative. None will result as a weight of 1.
+    Weight represent the importance of a dimension in a value. It can be greater than 1 to make it more
+    important, or less than 1 to make it less important. It can also be negative.
+    Setting a weight of ``None`` will result as a weight of 1.
 
-    A negative weigh will subtract the value of the dimension to the distance, instead of adding it. If you set use_abs
-    to False in Plan.neighbors method, negative values will considered as nearest than a 0 distance to the searched value.
+    A negative weight will subtract the value of the dimension to the distance, instead of adding it.
+    If you set ``use_abs`` to ``False`` in :meth:`Plan.neighbors<EasyKnn.plan.Plan.neighbors>` method,
+    negative values will be considered as nearest than a 0 distance to the searched value.
 
-    :param weight: The weight of each dimension. Must be a list of None, float or int values. Can be empty.
-                    The default value is either 1 or None
+    :param weight: The weight of each dimension. Must be a ``list`` of ``None``, ``float`` or ``int``.
     """
 
-    def __init__(self, weight: List[Union[float, int, None]]):
+    def __init__(self, weight: List[Union[float, int, None]] = None):
+
+        if weight is None:
+            weight = []
+
         self._weight = weight
 
         # We will check if the weight is only composed of Nones, floats and ints
@@ -23,21 +28,22 @@ class Weight:
             raise TypeError("The weight must be composed of Nones, floats and ints")
 
     @property
-    def weight(self) -> List[Union[float, int, None]]:
+    def weights(self) -> List[Union[float, int, None]]:
         """
-        A list of weights, either None, float or int. Each weight represent the importance of a dimension in a value.
+        A ``list`` of weights, either ``None``, ``float`` or ``int``. Each weight
+        represent the importance of a dimension.
 
         :read-only: True
         """
 
         return self._weight
 
-    @weight.setter
-    def weight(self, *args) -> None:
+    @weights.setter
+    def weights(self, *args) -> None:
         raise ReadOnlyAttributeError("The weight attribute is read-only")
 
-    @weight.deleter
-    def weight(self, *args) -> None:
+    @weights.deleter
+    def weights(self, *args) -> None:
         raise CriticalDeletionError("The weight attribute cannot be deleted")
 
     def extend(self, data: Union[
@@ -45,10 +51,11 @@ class Weight:
         Union[float, int, None]            # Or a single weight
     ]) -> None:
         """
-        Extend the weight with a new weight
+        Extend the Weight for a new dimension. The new weight can be either a single weight or a list of weights.
 
-        :param data: The new weight, either a single weight or a list of weights. Weight can be None, float or int
-        :return: None
+        :param data: The new weight, either a single weight or a ``list`` of weights.
+                     Weight(s) can be ``None``, ``float`` or ``int``.
+        :return: ``None``
         """
 
         # We check if the given data is valid

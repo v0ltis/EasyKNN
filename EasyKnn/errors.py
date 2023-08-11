@@ -1,5 +1,6 @@
 class ValueAlreadyLinkedError(Exception):
-    """Raised when trying to add a single value in two different datasets
+    """Raised when trying to add a single :class:`Value<EasyKnn.value.Value>` in two different
+    :class:`Datasets<EasyKnn.dataset.Dataset>`.
 
     >>> from EasyKnn import Value
     >>> from EasyKnn import Dataset
@@ -19,7 +20,7 @@ class ValueAlreadyLinkedError(Exception):
 
 
 class DatasetAlreadyLinkedError(Exception):
-    """Raised when trying to add a dataset to two different plans
+    """Raised when trying to add a single :class:`Dataset<EasyKnn.dataset.Dataset>` to two different :class:`Plans<EasyKnn.plan.Plan>`.
 
     >>> from EasyKnn import Plan
     >>> from EasyKnn import Dataset
@@ -39,7 +40,8 @@ class DatasetAlreadyLinkedError(Exception):
 
 
 class NoDimensionError(Exception):
-    """Raised when trying to create a value with no dimensions, or composed only of None values
+    """Raised when trying to create a :class:`Value<EasyKnn.value.Value> with no dimensions, or composed only of
+    ``None``.
 
     >>> from EasyKnn import Value
     >>> value = Value([])

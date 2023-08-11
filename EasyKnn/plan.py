@@ -9,8 +9,7 @@ from EasyKnn.weight import Weight
 
 class Plan:
     """
-    Represents a plan for a KNN algorithm.
-    There will be represented each value in an X-dimensional space.
+    In a Plan, all :class:`Values<EasyKnn.value.Value` will be represented in an X-dimensional space as a point.
     """
     def __init__(self):
         self._datasets = []
@@ -19,7 +18,7 @@ class Plan:
     @property
     def datasets(self) -> List[Dataset]:
         """
-        A list of all the datasets of the plan
+        A list of all the :class:`Datasets`<EasyKnn.datasets.Datasets>` of the Plan
 
         :read-only: True
         """
@@ -36,7 +35,8 @@ class Plan:
     @property
     def memoized(self) -> dict:
         """
-        A dictionary of all the memoized values of the plan
+        A dictionary containing all the memoized distances of the Plan during the execution of
+        the :meth:`neighbors<EasyKnn.plan.Plan.neighbors>` method.
 
         :read-only: True
         """
@@ -52,10 +52,10 @@ class Plan:
 
     def add_dataset(self, dataset: Dataset):
         """
-        Add a single dataset to the plan
+        Add a single :class:`Dataset<EasyKnn.dataset.Dataset>` to the Plan
 
-        :param dataset: The dataset to add to the plan
-        :return: None
+        :param dataset: The :class:`Dataset<EasyKnn.dataset.Dataset>` to add to the plan
+        :return: ``None``
 
         >>> plan = Plan()
         >>> dataset = Dataset()
@@ -73,9 +73,10 @@ class Plan:
 
     def add_datasets(self, datasets: List[Dataset]):
         """
-        Add one or more datasets to the plan
-        :param datasets: A list of datasets to add to the plan
-        :return: None
+        Add one or more :class:`Datasets<EasyKnn.dataset.Dataset>` to the Plan
+
+        :param datasets: A list of :class:`Datasets<EasyKnn.dataset.Dataset>` to add to the Plan
+        :return: ``None``
 
         >>> plan = Plan()
         >>> dataset1 = Dataset()
@@ -97,14 +98,31 @@ class Plan:
 
     def clear_cache(self):
         """
-        Clear the cache of the plan
-        :return:
+        Clear the :attr:`Cache<EasyKnn.plan.Plan.memoized>` of the Plan's
+        :attr:`memoized distances<EasyKnn.plan.Plan.memoized>`.
+
+        :return: ``None``
         """
         self._memoized = {}
 
-    def _distance(self, value: Value, point: Value, weights: Weight, memoize: bool = True, use_abs = True) -> float:
+    def _distance(self, value: Value, point: Value, weights: Weight, memoize: bool = True, use_abs=True) -> float:
         """
-        Get the distance between two values
+        Get the distance between two :class:`Values<EasyKnn.value.Value>`.
+
+        :param value: The first :class:`Value<EasyKnn.value.Value>` to compare. When used by the
+                :meth:`neighbors<EasyKnn.plan.Plan.neighbors>` method, this is the main
+                :class:`Value<EasyKnn.value.Value>, compared to all the :class:`Values<EasyKnn.value.Value>`
+                of the added datasets.
+        :param point: The second :class:`Value<EasyKnn.value.Value>` to compare. When used by the
+                :meth:`neighbors<EasyKnn.plan.Plan.neighbors>`method, this will be a point from the Plan object.
+        :param weights: The :class:`Weight<EasyKnn.weight.Weight>` to use to calculate the distance. By default, an
+                empty :class:`Weight<EasyKnn.weight.Weight>` will be used, which means that all the dimensions will
+                have the same weight.
+        :param memoize: If True, the distance will be memoized in the :attr:`Cache<EasyKnn.plan.Plan.memoized>`
+                of the plan.
+        :param use_abs: If True, the absolute value of the distance will be returned. If False, a negative value could
+                be returned if the Weight is negative.
+
         :return: The distance between the two values
 
         >>> value = Value([1, 2, 2])
@@ -167,17 +185,18 @@ class Plan:
         """
         Get the k nearest neighbors of a value
 
-        :param value: The value to get the neighbors
-        :param memoize: If you want to memoize the distances between the values. This will make the algorithm faster,
-                        but will use more memory.
-        :param nonify: If all dataset should be nonized to the same dimension as the given value.
-        :param weight: The weight to use for the distance calculation. By default, each dimension will have a weight
-                        set to 1.
+        :param value: The :class:`Value<EasyKnn.value.Value>` to get the neighbors
+        :param memoize: If you want to memoize the distances between the :class:`Value<EasyKnn.value.Value>`.
+                    This will make the algorithm faster,but will use more memory.
+        :param nonify: If all dataset should be :meth:`nonified<EasyKnn.dataset.Dataset.nonify>` to the same dimension
+                    as the given :class:`Value<EasyKnn.value.Value>`.
+        :param weight: The :class:`Weight<EasyKnn.weight.Weight>` to use for the distance calculation. By default, each
+                    dimension will have a weight set to 1.
         :param use_abs: If the absolute value of the distance should be used. Useless with the default weight,
-                        but if negatives weights are used, this can be usefull. Disabling this will make the algorithm
-                        considering a distance of -7 nearest than 0 for example. Enabling this will make the algorithm
-                        considering a distance of 0 nearest than -7.
-        :return: A Neighbours object
+                    but if negatives weights are used, this can be useful. Disabling this will make the algorithm
+                    considering a distance of -7 nearest than 0 for example. Enabling it will make the algorithm
+                    considering a distance of -7 equal to 7, and so further than 0.
+        :return: A :class:`Neighbors<EasyKnn.neighbors.Neighbors>` object containing the nearest neighbors and datasets
         """
 
         points = []
@@ -191,6 +210,6 @@ class Plan:
         for point in values:
             distance = self._distance(value, point, weight, memoize, use_abs=use_abs)
 
-            points.append(point.to_point(distance))
+            points.append(point._to_point(distance))
 
         return Neighbors(points)

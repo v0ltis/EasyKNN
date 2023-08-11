@@ -7,7 +7,10 @@ from EasyKnn.value import Value
 
 class Dataset:
     """
-    Represent a set of data
+    Represent a collection of :class:`Values<EasyKnn.value.Value>`. This class will be then used to create
+    a :class:`Plan<EasyKnn.plan.Plan>`.
+
+    :param display_name: The displayed name of the Dataset
     """
 
     def __init__(self, display_name: str = None):
@@ -23,7 +26,7 @@ class Dataset:
     @property
     def data(self) -> List[Value]:
         """
-        A list of all the values in the dataset.
+        A list of all the :class:`Value<EasyKnn.value.Value>` in the Dataset.
 
         :read-only: True
         """
@@ -40,7 +43,8 @@ class Dataset:
     @property
     def dataset_dimension(self) -> int:
         """
-        The dimension of the dataset.
+        The dimension of the Dataset. A dimension is the largest number of coordinates a
+        :class:`Value<EasyKnn.value.Value>` has in the whole Dataset.
 
         :read-only: True
         """
@@ -57,7 +61,8 @@ class Dataset:
     @property
     def average_dist(self) -> float:
         """
-        The average distance of the dataset to the other datasets in the plan.
+        The average distance of the Dataset to the :class:`Value<EasyKnn.value.Value>`. This attribute is ``None``
+        until :meth:`Plan.neighbors<EasyKnn.plan.Plan.neighbors>` is called.
 
         :read-only: True
         """
@@ -74,7 +79,7 @@ class Dataset:
     @property
     def linked_plan(self):
         """
-        The plan the dataset is linked to. Editing this attribute is strongly discouraged.
+        The :class:`Plan<EasyKnn.plan.Plan>` the Dataset is linked to. Editing this attribute is strongly discouraged.
 
         :read-only: False
         """
@@ -93,33 +98,34 @@ class Dataset:
 
     def add_value(self, value: Value):
         """
-        Add a single value to the dataset
+        Add a single :class:`Value<EasyKnn.value.Value>` to the Dataset
 
-        :param value: The value to add to the dataset
-        :return: None
+        :param value: The :class:`Value<EasyKnn.value.Value>` to add to the Dataset
+        :return: ``None``
         """
         self._data.append(value)
         self._dataset_dimension = self.get_largest_dimension()
 
-        self.update_value_dataset()
+        self._update_value_dataset()
 
     def add_values(self, values: List[Value]):
         """
-        Add one or more values to the dataset
+        Add one or more :class:`Values<EasyKnn.value.Value>` to the Dataset
 
-        :param values: A list containing the values to add to the dataset
-        :return: None
+        :param values: A list containing the :class:`Values<EasyKnn.value.Value>` to add to the Dataset
+        :return: ``None``
         """
         self._data.extend(values)
         self._dataset_dimension = self.get_largest_dimension()
 
-        self.update_value_dataset()
+        self._update_value_dataset()
 
-    def update_value_dataset(self) -> None:
+    def _update_value_dataset(self) -> None:
         """
-        Update the dataset attribute of all the values in the dataset
+        Update the :atr:`Dataset<EasyKnn.value.Value.dataset>` attribute of all the
+        :class:`Values<EasyKnn.value.Value>` in the Dataset
 
-        :return: None
+        :return: ``None``
         """
         for value in self._data:
             if value.dataset is None:
@@ -130,18 +136,20 @@ class Dataset:
 
     def get_largest_dimension(self) -> int:
         """
-        Get the largest dimension of the dataset
+        Get the largest dimension of the Dataset. The largest dimension of all the :class:`Values<EasyKnn.value.Value>`
 
-        :return: The largest dimension of the dataset
+        :return: The largest dimension of the Dataset
         """
         return max([value.dimension for value in self._data])
 
     def nonify(self, min_dimension: int = None) -> None:
         """
-        Add "None"s to all values in the dataset where the dimension is smaller than the dataset dimension.
-        The min dimension is either the biggest dimension of a value in the dataset or the min_dimension parameter.
+        Add ``None`` to all :class:`Values<EasyKnn.value.Value>` in the Dataset where the dimension is smaller than the
+        Dataset dimension.
 
-        :return: None
+        :param min_dimension: The minimum length of the :class:`Values<EasyKnn.value.Value>` in the Dataset.
+                If ``None``, the Dataset dimension will be used.
+        :return: ``None``
 
         >>> dataset = Dataset()
         >>> dataset.add_values([Value([1, 2, 3]), Value([4, 5]), Value([6, 7, 8, 9])])
@@ -160,9 +168,9 @@ class Dataset:
 
     def average(self) -> List[float]:
         """
-        Get the average position of all the values in the dataset. Nones values will not be counted.
+        Get the average position of all the values in the Dataset. Nones values will not be counted.
 
-        :return: A list containing the average position of all the values in the dataset
+        :return: A list containing the average position of all the values in the Dataset
 
         >>> dataset = Dataset()
         >>> dataset.add_values([Value([2, 2]), Value([4, 5]), Value([6, 8])])
