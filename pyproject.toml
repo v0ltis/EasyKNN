@@ -1,10 +1,10 @@
 [project]
-name = "EasyKNN"
+name = "EasyPyKnn"
 version = "0.1.0"
 authors = [
   { name="v0ltis", email="hello@voltis.me" },
 ]
-description = "An easy educational implementation of the KNN algorithm"
+description = "An easy educational implementation of the K nearest neighbours algorithm"
 readme = "README.md"
 requires-python = ">=3"
 classifiers = [

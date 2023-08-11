@@ -7,7 +7,7 @@ EasyKNN is a simple implementation of the K-Nearest Neighbors algorithm in Pytho
 EasyKNN is available on PyPI:
 
 ```bash
-pip install easyknn
+pip install EasyPyKnn
 ```
 
 ## Usage
