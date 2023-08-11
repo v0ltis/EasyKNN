@@ -87,6 +87,10 @@ class Dataset:
         else:
             raise DatasetAlreadyLinkedError("This dataset is already linked to a plan")
 
+    @linked_plan.deleter
+    def linked_plan(self):
+        raise CriticalDeletionError("The linked_plan attribute cannot be deleted")
+
     def add_value(self, value: Value):
         """
         Add a single value to the dataset
