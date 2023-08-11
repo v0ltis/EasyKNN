@@ -96,15 +96,15 @@ class Neighbours:
 
         # We save each average distance in each dataset
         for dataset in count:
-            dataset.average_dist = count[dataset] / len(dataset.data)
+            dataset._average_dist = count[dataset] / len(dataset.data)
 
         #  We sort the datasets by the average distance
 
-        self.dataset_neighbours = sorted(count.keys(), key=lambda x: x.average_dist)
+        self._dataset_neighbours = sorted(count.keys(), key=lambda x: x.average_dist)
 
         # We now sort the values by the distance
 
-        self.neighbours = sorted(self.neighbours, key=lambda x: x.distance)
+        self._neighbours = sorted(self.neighbours, key=lambda x: x.distance)
 
     def nearest_neighbour(self, k=1) -> List[Point]:
         """
