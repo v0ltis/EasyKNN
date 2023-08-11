@@ -1,7 +1,7 @@
 from typing import Union, List
 from typing import TYPE_CHECKING
 
-from EasyKnn.errors import NoDimensionError, ReadOnlyAttributeError
+from EasyKnn.errors import NoDimensionError, ReadOnlyAttributeError, CriticalDeletionError
 
 if TYPE_CHECKING:
     from EasyKnn.dataset import Dataset
@@ -48,9 +48,12 @@ class Point:
         return self._coordinates
 
     @coordinates.setter
-    @coordinates.deleter
     def coordinates(self, *args):
         raise ReadOnlyAttributeError("The coordinates attribute is read-only")
+
+    @coordinates.deleter
+    def coordinates(self):
+        raise CriticalDeletionError("The coordinates attribute cannot be deleted")
 
     # Alias for coordinates
     value = coordinates
@@ -71,9 +74,12 @@ class Point:
         return self._distance
 
     @distance.setter
-    @distance.deleter
     def distance(self, *args):
         raise ReadOnlyAttributeError("The distance attribute is read-only")
+
+    @distance.deleter
+    def distance(self):
+        raise CriticalDeletionError("The distance attribute cannot be deleted")
 
     @property
     def dataset(self) -> "Dataset":
@@ -85,9 +91,12 @@ class Point:
         return self._dataset
 
     @dataset.setter
-    @dataset.deleter
     def dataset(self, *args):
         raise ReadOnlyAttributeError("The dataset attribute is read-only")
+
+    @dataset.deleter
+    def dataset(self, *args):
+        raise CriticalDeletionError("The dataset attribute cannot be deleted")
 
     def __repr__(self):
         return f"{self.display_name if self.display_name is not None else self.coordinates}"

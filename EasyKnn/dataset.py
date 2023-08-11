@@ -1,6 +1,6 @@
 from typing import List
 
-from EasyKnn.errors import ReadOnlyAttributeError
+from EasyKnn.errors import ReadOnlyAttributeError, ValueAlreadyLinkedError, CriticalDeletionError
 from EasyKnn.value import Value
 
 
@@ -28,9 +28,12 @@ class Dataset:
         return self._data
 
     @data.setter
+    def data(self, *args):
+        raise ReadOnlyAttributeError("The data attribute is read-only")
+
     @data.deleter
     def data(self, *args):
-        raise ReadOnlyAttributeError("The data cannot be modified")
+        raise CriticalDeletionError("The data attribute cannot be deleted")
 
     @property
     def dataset_dimension(self) -> int:
@@ -42,9 +45,12 @@ class Dataset:
         return self._dataset_dimension
 
     @dataset_dimension.setter
+    def dataset_dimension(self, *args):
+        raise ReadOnlyAttributeError("The dataset_dimension attribute is read-only")
+
     @dataset_dimension.deleter
     def dataset_dimension(self, *args):
-        raise ReadOnlyAttributeError("The dataset_dimension cannot be modified")
+        raise ReadOnlyAttributeError("The dataset_dimension attribute cannot be modified")
 
     @property
     def average_dist(self) -> float:
@@ -56,9 +62,12 @@ class Dataset:
         return self._average_dist
 
     @average_dist.setter
+    def average_dist(self, *args):
+        raise ReadOnlyAttributeError("The average_dist attribute is read-only")
+
     @average_dist.deleter
     def average_dist(self, *args):
-        raise ReadOnlyAttributeError("The average_dist cannot be modified")
+        raise CriticalDeletionError("The average_dist attribute cannot be deleted")
 
     def add_value(self, value: Value):
         """
@@ -95,7 +104,7 @@ class Dataset:
                 value._set_dataset(self)
 
             elif value.dataset is not self:
-                raise ValueError("A single value cannot be in two different datasets")
+                raise ValueAlreadyLinkedError("A single value cannot be in two different datasets")
 
     def get_largest_dimension(self) -> int:
         """

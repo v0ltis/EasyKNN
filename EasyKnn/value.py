@@ -1,7 +1,7 @@
 from typing import List, Union
 from typing import TYPE_CHECKING
 
-from EasyKnn.errors import ValueAlreadyLinkedError, ReadOnlyAttributeError, CriticalValueDeletionError
+from EasyKnn.errors import ValueAlreadyLinkedError, ReadOnlyAttributeError, CriticalDeletionError, NoDimensionError
 from EasyKnn.point import Point
 
 if TYPE_CHECKING:
@@ -48,14 +48,14 @@ class Value:
     def coordinates(self, value):
 
         if value == [None] * len(value):  # This way is much faster than using all()
-            raise ValueError("Coordinates cannot be empty or only None values")
+            raise NoDimensionError("Coordinates cannot be empty or only None values")
         else:
             self._coordinates = value
             self._dimension = len(value)
 
     @coordinates.deleter
     def coordinates(self):
-        raise CriticalValueDeletionError("The coordinates attribute cannot be deleted")
+        raise CriticalDeletionError("The coordinates attribute cannot be deleted")
 
     # Alias for coordinates
     value = coordinates
@@ -70,9 +70,12 @@ class Value:
         return self._dimension
 
     @dimension.setter
-    @dimension.deleter
     def dimension(self, *args):
         raise ReadOnlyAttributeError("The dimension attribute is read-only")
+
+    @dimension.deleter
+    def dimension(self):
+        raise CriticalDeletionError("The dimension attribute cannot be deleted")
 
     @property
     def dataset(self) -> "Dataset":
@@ -84,9 +87,12 @@ class Value:
         return self._dataset
 
     @dataset.setter
-    @dataset.deleter
     def dataset(self, *args):
         raise ReadOnlyAttributeError("The dataset attribute is read-only")
+
+    @dataset.deleter
+    def dataset(self):
+        raise CriticalDeletionError("The dataset attribute cannot be deleted")
 
     def _set_dataset(self, value: "Dataset") -> None:
         """

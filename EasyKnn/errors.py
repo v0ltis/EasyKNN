@@ -18,6 +18,6 @@ class ReadOnlyAttributeError(Exception):
     pass
 
 
-class CriticalValueDeletionError(Exception):
+class CriticalDeletionError(Exception):
     """Raised when trying to delete a critical value"""
     pass

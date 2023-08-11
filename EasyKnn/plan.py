@@ -1,6 +1,6 @@
 from typing import List
 
-from EasyKnn.errors import ReadOnlyAttributeError
+from EasyKnn.errors import ReadOnlyAttributeError, CriticalDeletionError
 from EasyKnn.neighbours import Neighbours
 from EasyKnn.value import Value
 from EasyKnn.dataset import Dataset
@@ -26,9 +26,12 @@ class Plan:
         return self._datasets
 
     @datasets.setter
-    @datasets.deleter
     def datasets(self, *args):
         raise ReadOnlyAttributeError("The datasets attribute is read-only")
+
+    @datasets.deleter
+    def datasets(self, *args):
+        raise CriticalDeletionError("The datasets attribute cannot be deleted")
 
     @property
     def memoized(self) -> dict:
@@ -40,9 +43,12 @@ class Plan:
         return self._memoized
 
     @memoized.setter
-    @memoized.deleter
     def memoized(self, *args):
         raise ReadOnlyAttributeError("The memoized attribute is read-only")
+
+    @memoized.deleter
+    def memoized(self, *args):
+        raise CriticalDeletionError("The memoized attribute cannot be deleted")
 
     def add_dataset(self, dataset: Dataset):
         """

@@ -4,4 +4,4 @@ from EasyKnn.plan import Plan
 from EasyKnn.neighbours import Neighbours
 from EasyKnn.point import Point
 from EasyKnn.errors import ValueAlreadyLinkedError, DatasetAlreadyLinkedError, \
-                           NoDimensionError, ReadOnlyAttributeError, CriticalValueDeletionError
+                           NoDimensionError, ReadOnlyAttributeError, CriticalDeletionError

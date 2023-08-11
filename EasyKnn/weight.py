@@ -20,6 +20,24 @@ class Weight:
         if not all([type(x) in [float, int, None] for x in weight]):
             raise TypeError("The weight must be composed of Nones, floats and ints")
 
+    @property
+    def weight(self) -> List[Union[float, int, None]]:
+        """
+        A list of weights, either None, float or int. Each weight represent the importance of a dimension in a value.
+
+        :read-only: True
+        """
+
+        return self._weight
+
+    @weight.setter
+    def weight(self, *args) -> None:
+        raise ReadOnlyAttributeError("The weight attribute is read-only")
+
+    @weight.deleter
+    def weight(self, *args) -> None:
+        raise CriticalDeletionError("The weight attribute cannot be deleted")
+
     def extend(self, data: Union[
         List[Union[float, int, None]],     # Either a list of weights
         Union[float, int, None]            # Or a single weight

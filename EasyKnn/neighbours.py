@@ -1,6 +1,6 @@
 from typing import List
 
-from EasyKnn.errors import ReadOnlyAttributeError
+from EasyKnn.errors import ReadOnlyAttributeError, CriticalDeletionError
 from EasyKnn.dataset import Dataset
 from EasyKnn.point import Point
 
@@ -32,9 +32,12 @@ class Neighbours:
         return self._neighbours
 
     @neighbours.setter
-    @neighbours.deleter
     def neighbours(self, *args):
         raise ReadOnlyAttributeError("The neighbours attribute is read-only")
+
+    @neighbours.deleter
+    def neighbours(self, *args):
+        raise CriticalDeletionError("The neighbours attribute cannot be deleted")
 
     @property
     def dataset_neighbours(self) -> List[Dataset]:
@@ -46,9 +49,12 @@ class Neighbours:
         return self._dataset_neighbours
 
     @dataset_neighbours.setter
-    @dataset_neighbours.deleter
     def dataset_neighbours(self, *args):
         raise ReadOnlyAttributeError("The dataset_neighbours attribute is read-only")
+
+    @dataset_neighbours.deleter
+    def dataset_neighbours(self, *args):
+        raise CriticalDeletionError("The dataset_neighbours attribute cannot be deleted")
 
     @property
     def average_dist(self) -> float:
@@ -60,9 +66,12 @@ class Neighbours:
         return self._average_dist
 
     @average_dist.setter
-    @average_dist.deleter
     def average_dist(self, *args):
         raise ReadOnlyAttributeError("The average_dist attribute is read-only")
+
+    @average_dist.deleter
+    def average_dist(self, *args):
+        raise CriticalDeletionError("The average_dist attribute cannot be deleted")
 
     def _process_data(self):
         """
